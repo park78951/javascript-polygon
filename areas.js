@@ -1,72 +1,116 @@
-    function areaOfCirc(...args) {
-        let area = 0;
-        let r = 0;
-        let paramLength = args.length;
+let functionCount = [];
 
-        checkParams(paramLength, 1);
-        checkNum(args);
+function printExecutionSequence(name){
+    console.log("계산수행 순서- " + functionCount.join(', '));
+}
 
-        r = args[0]
+function typeNumber(array){
     
-        area = Math.PI*r*r;
-    
-        return area.toFixed(2);
+    array.forEach(function(item){
+        if(typeof item !== "number"){
+            throw "숫자를 입력하세요";
+        }
+    });
+}
+
+function checkParameter(len,condition1,condition2){
+    if(arguments.length === 2){
+        if(len!==condition1) {
+            throw "인자 갯수가 맞지않습니다.";
+        }else{
+            return ;
+        }
+    } else {
+        if(len < condition1 || len > condition2 ) {
+            throw "인자 갯수가 맞지않습니다.";
+        } else {
+            return;
+        }
     }
+}
+
+function getArea(name,...param){
+    switch(name){
+        case 'circle':
+        
+            typeNumber(param);
+            checkParameter(param.length,1,2);
+            functionCount.push();
+            param.sort(function(a,b){
+                return a-b;
+            })
+            return areaOfCircle(name, param[0],param[1]);
+            
+            case 'rect':
+            
+            typeNumber(param);
+            checkParameter(param.length,2);
+            return areaOfRectangular(name, param[0],param[1])
+            
+            case 'trapezoid':
+            
+            typeNumber(param);
+            checkParameter(param.length,3);
+            return areaOfTrapezoid(name, param[0],param[1],param[2]);
+            
+            case 'cylinder':
+            
+            typeNumber(param);
+            checkParameter(param.length,2);
+            return areaOfCylinder(name, param[0],param[1]);
+        }       
+    };
     
-    function areaOfRect(...args){
+    
+    function areaOfCircle(name, radius, n) {
         let area = 0;
-        let w, l;
-        let paramLength = args.length;
-
-        checkParams(paramLength, 2);
-        checkNum(args);
-
-        [w, l] = args
-        area = w * l;
-    
-        return area;
-    }
-    
-    function areaOfTrap(...args){
-        let area = 0;
-        const [w, l, h] = args;
-        let paramLength = args.length;
-
-        checkParams(paramLength, 3);
-        checkNum(args);
-
-        area = (w + l) * h / 2;
-    
-        return area;
-    }
-    
-    function areaOfCyli(...args){
-        let area = 0;
-        let paramLength = args.length;
-        const [r, h] = args
-
-        checkParams(paramLength, 2);
-        checkNum(args);
-
-        area = 2 * Math.PI * r * (r + h);
-    
-        return area.toFixed(2);
-    }
-
-    function checkNum(args) {
-        let arr = args;
-        for(let i = 0; i < arr.length; i++) {
-            if(typeof arr[i] !== 'number'){
-                throw reqNum.message;
+        
+        area = (Math.PI*radius*radius).toFixed(2);
+        functionCount.push(name + ": " + area);
+        console.log(area);
+        
+        if(n !== undefined){
+            if(radius === n){
+                return;
+            }else{
+                radius++;
+                return areaOfCircle(name, radius, n);
             }
-        }
     }
+    
+    return area;
+}
 
-    function checkParams(realParamNum, neededParamNum){
-        if(realParamNum !== neededParamNum) {
-            throw checkArg.message;
-        }
-    }
+function areaOfRectangular(name, a, b){
+    let area = 0;
+    area = a*b;
+    functionCount.push(name + ": " + area);
+    console.log(area);
+    return area;
+}
 
-    let checkArg = new Error('인자 갯수가 맞지 않습니다.');
-    let reqNum = new Error('숫자를 입력하세요.');
+function areaOfTrapezoid(name, a, b, h){
+    let area = 0;
+    area = (a+b)*h/2;
+    functionCount.push(name + ": " + area);
+    console.log(area);
+    return area;
+}
+
+function areaOfCylinder(name, r, h){
+    let area = 0;
+    area = (2*Math.PI*r*(r+h)).toFixed(2);
+    functionCount.push(name + ": " + area);
+    console.log(area);
+    return area.toFixed(2);
+}
+
+
+
+
+getArea('circle', 2, 3);
+getArea('rect', 2, 3);
+getArea('circle', 2, 3);
+getArea('rect', 2, 3);
+
+printExecutionSequence();
